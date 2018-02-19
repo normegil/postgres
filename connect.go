@@ -34,9 +34,9 @@ func Connect(cfg Configuration) (*sql.DB, error) {
 }
 
 type Configuration struct {
-	Address  string `toml:"address"`
-	Port     int    `toml:"port"`
-	User     string `toml:"user"`
-	Password string `toml:"pass"`
-	Database string `toml:"database"`
+	Address  string `toml:"address" json:"address"`
+	Port     int    `toml:"port" json:"port"`
+	User     string `toml:"user" json:"user"`
+	Password string `toml:"pass" json:"password"`
+	Database string `toml:"database" json:"database"`
 }
