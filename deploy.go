@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"github.com/google/uuid"
 	"time"
 
 	"testing"
@@ -13,7 +14,6 @@ import (
 	"github.com/normegil/docker"
 	"github.com/normegil/interval"
 	"github.com/pkg/errors"
-	"github.com/satori/go.uuid"
 )
 
 type ContainerConfiguration struct {
@@ -22,7 +22,7 @@ type ContainerConfiguration struct {
 
 func DockerDeploy(prefix string, ports interval.IntervalInteger) (Configuration, ContainerConfiguration, error) {
 	binding := docker.PortBinding{Protocol: "TCP", Internal: 5432, ExternalInterval: ports.String()}
-	pass, err := uuid.NewV4()
+	pass, err := uuid.NewRandom()
 	if err != nil {
 		return Configuration{}, ContainerConfiguration{}, errors.Wrapf(err, "Generating uuid")
 	}
