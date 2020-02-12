@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/pkg/errors"
 )
 
@@ -17,7 +18,7 @@ func ensurePostgreSQLExtentionAvailable(db *sql.DB, extentions []string) error {
 		}
 
 		if !exist {
-			if _, err := db.Exec("CREATE EXTENSION $1", extention); err != nil {
+			if _, err := db.Exec(fmt.Sprintf("CREATE EXTENSION %s", extention)); err != nil {
 				return errors.Wrapf(err, "creating extention %s", extention)
 			}
 		}
