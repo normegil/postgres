@@ -17,7 +17,7 @@ func ensurePostgreSQLExtentionAvailable(db *sql.DB, extentions []string) error {
 		}
 
 		if !exist {
-			if _, err := db.Exec("CREATE EXTENTION $1", extention); err != nil {
+			if _, err := db.Exec("CREATE EXTENSION $1", extention); err != nil {
 				return errors.Wrapf(err, "creating extention %s", extention)
 			}
 		}
