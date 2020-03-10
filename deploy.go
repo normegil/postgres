@@ -28,7 +28,7 @@ func DockerDeploy(prefix string, ports interval.IntervalInteger) (Configuration,
 	}
 	info, _, err := docker.New(docker.Options{
 		Name:  prefix,
-		Image: "postgres",
+		Image: "library/postgres",
 		Ports: []docker.PortBinding{binding},
 		EnvironmentVariables: map[string]string{
 			"POSTGRES_PASSWORD": pass.String(),

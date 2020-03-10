@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"fmt"
-	"github.com/normegil/postgres"
 	"github.com/normegil/interval"
+	"github.com/normegil/postgres"
 )
 
 func TestPostgresPackage(t *testing.T) {
@@ -25,7 +25,7 @@ func TestPostgresPackage(t *testing.T) {
 		cfg.Database = "postgres"
 		db, err := postgres.Connect(cfg)
 		if err != nil {
-			t.Fatalf("connect to postgres (%s): %s", cfg, err.Error())
+			t.Fatalf("connect to postgres (%+v): %s", cfg, err.Error())
 		}
 		defer db.Close()
 
