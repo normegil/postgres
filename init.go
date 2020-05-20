@@ -1,11 +1,39 @@
 package postgres
 
 import (
+	"database/sql"
 	"fmt"
 	"regexp"
 
 	"github.com/pkg/errors"
 )
+
+func DropDatabase(config Configuration) error {
+	db, err := Connect(Configuration{
+		Address:  config.Address,
+		Port:     config.Port,
+		User:     config.User,
+		Password: config.Password,
+		Database: "postgres",
+	})
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	exist, err := databaseExist(db, config.Database)
+	if nil != err {
+		return err
+	}
+
+	if exist {
+		_, err = db.Exec(fmt.Sprintf("DROP DATABASE %s", config.Database))
+		if err != nil {
+			return errors.Wrapf(err, "dropping database %s", config.Database)
+		}
+	}
+	return nil
+}
 
 func initDatabase(config Configuration) error {
 	db, err := Connect(Configuration{
@@ -20,13 +48,9 @@ func initDatabase(config Configuration) error {
 	}
 	defer db.Close()
 
-	row := db.QueryRow("SELECT EXISTS(SELECT * FROM pg_database WHERE datname=$1)", config.Database)
-	if err != nil {
-		return errors.Wrapf(err, "searching for database %s", config.Database)
-	}
-	var exist bool
-	if err = row.Scan(&exist); err != nil {
-		return errors.Wrapf(err, "scan results of search for %s", config.Database)
+	exist, err := databaseExist(db, config.Database)
+	if nil != err {
+		return err
 	}
 
 	if !exist {
@@ -45,4 +69,13 @@ func initDatabase(config Configuration) error {
 		}
 	}
 	return nil
+}
+
+func databaseExist(db *sql.DB, database string) (bool, error) {
+	row := db.QueryRow("SELECT EXISTS(SELECT * FROM pg_database WHERE datname=$1)", database)
+	var exist bool
+	if err := row.Scan(&exist); err != nil {
+		return false, errors.Wrapf(err, "scan results of search for %s", database)
+	}
+	return exist, nil
 }
